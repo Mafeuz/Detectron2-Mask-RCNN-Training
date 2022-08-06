@@ -1,0 +1,16 @@
+python==3.7.13 cudatoolkit=10.1
+
+conda install cudatoolkit=10.1 -c pytorch
+conda install -c anaconda cudnn
+conda install -c anaconda pywin32
+
+pip install ninja==1.10.2.3
+pip install scipy==1.7.3
+pip install cython==0.29.28
+pip install opencv-python==4.5.5
+pip torch==1.8.1+cu101 torchvision==0.9.1+cu101 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+
+git clone https://github.com/facebookresearch/detectron2.git detectron_repo
+pip install -q -e detectron_repo
+cd detectron_repo
+python setup.py build develop
