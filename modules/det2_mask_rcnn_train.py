@@ -103,21 +103,26 @@ def dataset_load(data_path, img_size, classes):
 #########################################################################################################################
 # ### Training the Detectron2 Instance Segmentation Model
 
-def det2_mask_build(data_path, img_size, classes, batch_size=2, lr=0.00025, workers=2, max_iter=1000):
+def det2_mask_build(data_path, img_size, classes, batch_size=2, lr=0.00025, workers=2, max_iter=1000, device='cuda:0'):
 
     microcontroller_metadata = dataset_load(data_path, img_size, classes)
 
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
-    cfg.DATASETS.TRAIN              = ("category_train",)
-    cfg.DATASETS.TEST               = ()
-    cfg.DATALOADER.NUM_WORKERS      = workers
-    cfg.MODEL.WEIGHTS               = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
-    cfg.SOLVER.IMS_PER_BATCH        = batch_size
-    cfg.SOLVER.BASE_LR              = lr
-    cfg.SOLVER.MAX_ITER             = max_iter
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(classes) + 1
-
+    cfg.DATASETS.TRAIN                = ("category_train",)
+    cfg.DATASETS.TEST                 = ()
+    cfg.DATALOADER.NUM_WORKERS        = workers
+    cfg.MODEL.DEVICE                  = device
+    cfg.MODEL.WEIGHTS                 = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
+    cfg.SOLVER.IMS_PER_BATCH          = batch_size
+    cfg.SOLVER.BASE_LR                = lr
+    cfg.SOLVER.MAX_ITER               = max_iter
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES   = len(classes) + 1
+    cfg.INPUT.MIN_SIZE_TRAIN          = (800,)
+    cfg.INPUT.MIN_SIZE_TEST           = 800
+    cfg.INPUT.MAX_SIZE_TRAIN          = 1333
+    cfg.INPUT.MAX_SIZE_TEST           = 1333
+    
     return cfg, microcontroller_metadata
 
 #########################################################################################################################

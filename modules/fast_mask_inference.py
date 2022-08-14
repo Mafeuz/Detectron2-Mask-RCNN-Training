@@ -24,9 +24,10 @@ from detectron2.config import get_cfg
 
 '''
 ##########################################################################################################################
-def load_maskrcnn(model_path, classes_list, conf_thresh):
+def load_maskrcnn(model_path, classes_list, conf_thresh, device='cuda:0'):
 
     cfg = get_cfg()
+    cfg.MODEL.DEVICE = device
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
     cfg.DATASETS.TEST = ()
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(classes_list) + 1

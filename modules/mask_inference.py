@@ -81,25 +81,26 @@ def dataset_load(classes):
 
     random_string = str(random.randint(0, 100000))
     
-    for d in ['test']:
+    d = 'test'
 
-        DatasetCatalog.register(
-            random_string + d, 
-            lambda d=d: get_data_dicts(d, classes)
-        )
+    DatasetCatalog.register(
+        random_string + d, 
+        lambda d=d: get_data_dicts(d, classes)
+    )
 
-        MetadataCatalog.get(random_string + d).set(thing_classes=classes)
+    MetadataCatalog.get(random_string + d).set(thing_classes=classes)
 
-        microcontroller_metadata = MetadataCatalog.get(random_string + 'test')
-    
+    microcontroller_metadata = MetadataCatalog.get(random_string + d)
+
     return microcontroller_metadata
 
 ##########################################################################################################################
-def load_maskrcnn(model_path, classes_list, conf_thresh):
+def load_maskrcnn(model_path, classes_list, conf_thresh, device='cuda:0'):
 
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
     cfg.DATASETS.TEST = ()
+    cfg.MODEL.DEVICE = device
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(classes_list) + 1
 
     cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, model_path)
